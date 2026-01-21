@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="website icon" href="images/icon.png" type="png">
+  <title>My Playlist</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Amatic+SC">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    *{
+      font-family: 'Amatic SC', serif;
+    }
+    body{
+      margin: 0;
+      background-image: url("images/cover.jpg");
+      background-size: cover;
+    }
+    #butt{
+      margin-top: 20px;
+      display: block;
+      justify-content: center;
+      align-items: center;
+      width: 420px;
+      height: 455px;
+      overflow-y: auto;
+    }
+    #butt::-webkit-scrollbar {
+      height: 0px;
+    }
+    .display{
+      display: flex;
+      margin-top: 8px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      padding: 10px;
+    }
+    .display:hover{
+      background-color: rgba(59, 60, 54, 0.8);
+    }
+    .name{
+      color: white;
+      margin-left: 20px;
+      margin-top: 40px;
+      font-size: 1.5rem;
+      font-weight: 900;
+    }
+    .name1{
+      color: white;
+      margin-left: 20px;
+      font-size: 14px;
+    }
+    .fa-solid{
+      color: white;
+      margin-left: 55px;
+      margin-top: 20px;
+      cursor: pointer;
+      transition: all 0.8s;
+    }
+    .fa-play,.fa-pause{
+      transform: scale(2.0);
+    }
+    #main{
+      width: 900px;
+      position: relative;
+      left: 100px;
+      top: 35px;
+    }
+    .fm{
+      display: flex;
+      width: 1000px;
+      height: 205px;
+    }
+    .inner{
+      color: white;
+      margin-left: 20px;
+      font-size: 4.0rem;
+    }
+    .inner1{
+      color: white;
+      margin-left: 20px;
+      font-size: 30px;
+    }
+    .range{
+      margin-left: 25px;
+      margin-top: 20px;
+    }
+    .rotate{
+      border: 8px solid white;
+      border-radius: 50%;
+      animation: loading 10s linear infinite;
+      cursor: pointer;
+    }
+    @keyframes loading{
+      0% { 
+        transform: rotate(0); 
+      }
+      100% { 
+        transform: rotate(360deg);
+      }
+    }
+    .paused {
+      animation-play-state: paused;
+    }
+    #range-slider{
+      width: 200px;
+      -webkit-appearance: none;
+      margin-top: 10px;
+      height: 5px;
+      background: white;
+      border-radius: 5px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+    #range-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 15px;
+      height: 15px;
+      background: #4CAF50;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    #bar{
+      margin-left: 10px;
+      margin-top: 35px;
+    }
+    #begin{
+      color: white;
+      position: relative;
+      top: -20px;
+      left: 20px;
+    }
+    #end{
+      color: white;
+      position: relative;
+      top: -20px;
+      left: -20px;
+    }
+    #searchsong{
+      color: white;
+      position: absolute;
+      left: 1150px;
+      top: 10px;
+      width: 300px;
+      outline: none;
+      border: 1px solid white;
+      border-radius: 20px;
+      background: transparent;
+      padding: 10px 35px;
+    }
+    ::placeholder {
+      color: white;
+      font-weight: bold;
+    }
+    .fa-magnifying-glass{
+      color: white;
+      position: absolute;
+      left: 1107px;
+      top: 1.5px;
+    }
+    .fa-house{
+      color: white;
+      position: absolute;
+      left: 1050px;
+      transform: scale(1.5);
+    }
+    .fa-house:hover{
+      transform: scale(2.0);
+    }
+    #video-background {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(1.15);
+      min-width: 100%;
+      min-height: 100%;
+      width: auto;
+      height: auto;
+      z-index: -1;
+    } 
+  </style>
+</head>
+<body>
+  <script>
+    document.body.innerHTML=`
+    <input type="search" id="searchsong" autocomplete="off" placeholder="Search for a song...">
+    <i class="fa-solid fa-house" onclick="location.reload()"></i>
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <div id="main">
+      <div id="dum" style="width:1350px;">
+        <img src="images/main.jpg" height=200 style="border-radius: 5px;">
+      </div>
+      <div id="butt"></div>
+    </div>`;
+    let currentSong;
+    let playPause;
+    let k='';
+    let forKeyBoard;
+    let songs=[
+    {
+      songName:"Thala",
+      song:"Music/Thala.mp3",
+      img:"images/Thala.jpg",
+      artist:"CSK",
+      bgImg:"Video/Thala.mkv"
+    },
+    {
+      songName:'Badass',
+      song:"Music/Badass.mka",
+      img:"images/Badass.jpg",
+      artist:"Anirudh Ravichander",
+      bgImg:"Video/Badass.mkv"
+    },
+    {
+      songName:"Anjanadri Theme Song",
+      song:"Music/Anjanadri Theme Song.mka",
+      img:"images/Anjanadri.jpg",
+      artist:"Siva Sakthi Datta",
+      bgImg:"Video/Anjanadri Theme Song.mkv"
+    },
+    {
+      songName:"The Guntur Song",
+      song:"Music/The Guntur Song.mka",
+      img:"images/The-Guntur-Song.jpg",
+      artist:"Anurag Kulkarni",
+      bgImg:"Video/The Guntur Song.mkv"
+    },
+    {
+      songName:"Vikram Title Track",
+      song:"Music/Vikram Title Track.mka",
+      img:"images/Vikram.jpg",
+      artist:"Anirudh Ravichander",
+      bgImg:"Video/Vikram Title Track.mkv"
+    },
+    {
+      songName:"Ek Niranjan",
+      song:"Music/Ek Niranjan.mka",
+      img:"images/Ek-Niranjan.jpg",
+      artist:"Ranjith",
+      bgImg:"Video/Ek Niranjan.mkv"
+    },
+    {
+      songName:"Yetu Pone",
+      song:"Music/Yetu Pone.mka",
+      img:"images/Yetu-Pone.jpg",
+      artist:"Kaala Bhairava",
+      bgImg:"Video/Yetu Pone.mkv"
+    },
+    {
+      songName:"Chilipiga",
+      song:"Music/Chilipiga.mka",
+      img:"images/Chilipiga.jpg",
+      artist:"Karthik",
+      bgImg:"Video/Chilipiga.mkv"
+    },
+    {
+      songName:"Jai Shri Ram",
+      song:"Music/Jai Shri Ram.mka",
+      img:"images/Jai-Shri-Ram.jpg",
+      artist:"Ajay Atul",
+      bgImg:"Video/Jai Shri Ram.mkv"
+    },
+    {
+      songName:"Asha Pasham",
+      song:"Music/Asha Pasham.mka",
+      img:"images/Asha-Pasham.jpg",
+      artist:"Anurag Kulkarni",
+      bgImg:"Video/Asha Pasham.mkv"
+    },
+    {
+      songName:"Mudhal Nee Mudivum Nee",
+      song:"Music/Mudhal Nee Mudivum Nee.mka",
+      img:"images/Mudhal-Nee-Mudivum-Nee.jpg",
+      artist:"Darbuka Siva",
+      bgImg:"Video/Mudhal Nee Mudivum Nee.mkv"
+    },
+    {
+      songName:"Em Sandheham Ledhu",
+      song:"Music/Em Sandheham Ledhu.mka",
+      img:"images/Em-Sandheham-Ledhu.jpg",
+      artist:"Kalyani Koduri",
+      bgImg:"Video/Em Sandheham Ledhu.mkv"
+    },
+    {
+      songName:"Oopiri Aguthunnadhey",
+      song:"Music/Oopiri Aguthunnadhey.mka",
+      img:"images/Oopiri-Aguthunnadhey.jpg",
+      artist:"Kalyani Koduri",
+      bgImg:"Video/Oopiri Aguthunnadhey.mkv"
+    },
+      {
+      songName:"Anuvanuvuu",
+      song:"Music/Anuvanuvuu.mka",
+      img:"images/Anuvanuvuu.jpg",
+      artist:"Arijit Singh",
+      bgImg:"Video/Anuvanuvuu.mkv"
+    }
+    ]
+
+    for(let i=0;i<songs.length;i++)
+    {
+      k+=`
+        <div class="display" onclick="play(${i})">
+          <img src="${songs[i].img}" height="60" style="border-radius: 5px;">
+          <div style="width:350px;" id="gif">
+            <span class="name">${songs[i].songName}</span><br>
+            <span class="name1">${songs[i].artist}</span>
+          </div>
+        </div>
+      `;
+    }
+    document.getElementById('butt').innerHTML=k;
+
+    document.getElementById('searchsong').addEventListener('input',search);
+    function search() 
+    {
+      let song=document.getElementById('searchsong').value.toLowerCase();
+      let k='';
+      for(let i=0;i<songs.length;i++)
+      {
+        if(songs[i].songName.toLowerCase().includes(song))
+        {
+          k+=`
+            <div class="display" onclick="play(${i})">
+              <img src="${songs[i].img}" height="60" style="border-radius: 5px;">
+              <div style="width:350px;" id="gif">
+                <span class="name">${songs[i].songName}</span><br>
+                <span class="name1">${songs[i].artist}</span>
+              </div>
+            </div>
+          `;
+        }
+        document.getElementById('butt').innerHTML=k;
+      }
+    }
+
+    function play(n)
+    {
+      forKeyBoard=n;
+      let k='';
+      k+=`
+      <div class="fm">
+        <audio class="run" id=${n} onended="songEnded(${n})">
+          <source src="${songs[n].song}" type="audio/mpeg">
+        </audio>
+        <video id="video-background" autoplay>
+          <source src="${songs[n].bgImg}" type="video/mp4">
+        </video>
+        <img src=${songs[n].img} height=200 class="rotate" id="null" onclick="resume(${n})">
+        <div style="width:2050px;">
+          <span class="inner">${songs[n].songName}</span><br>
+          <span class="inner1">${songs[n].artist}</span>
+          <div id="bar">
+            <b id="begin">00:00</b>
+            <input type="range" value="0" id="range-slider">
+            <b id="end">00:00</b>
+          </div>
+          <i class="fa-solid fa-backward" onclick="back(${n})"></i>
+          <i class="fa-solid fa-play" id="suii${n}" onclick="resume(${n})"></i>
+          <i class="fa-solid fa-forward" onclick="next(${n})"></i>
+        </div>
+      </div> 
+      `
+      document.getElementById('dum').innerHTML=k;
+      document.title=songs[n].songName;
+      document.getElementById(`suii${n}`).classList.replace('fa-play','fa-pause');
+
+      document.getElementById('video-background').addEventListener("play", function() 
+      {
+        document.getElementById(n).play();
+      });
+    
+      document.getElementById(n).addEventListener('loadedmetadata',function() 
+      {
+        document.getElementById('end').innerText=formatTime(this.duration);
+        document.getElementById('range-slider').max=this.duration;
+      });
+
+      document.getElementById(n).addEventListener('timeupdate',function() 
+      {
+        document.getElementById('range-slider').value=this.currentTime;
+        document.getElementById('begin').innerText=formatTime(this.currentTime);
+      });
+
+      document.getElementById('range-slider').addEventListener('input',function() 
+      {
+        document.getElementById(n).currentTime=this.value;
+        document.getElementById("video-background").currentTime=document.getElementById('range-slider').value
+      });
+    }
+
+    function resume(n)
+    {
+      let a=document.getElementById(n);
+      let b=document.getElementById(`suii${n}`);
+      if(currentSong && currentSong!=a)
+      { 
+        currentSong.pause();
+        playPause.classList.replace('fa-pause','fa-play');
+        currentSong.currentTime=0;
+      }
+      if(a.paused)
+      {
+        document.getElementById("video-background").play();
+        a.play();
+        document.getElementById('null').classList.remove('paused');
+        b.classList.replace('fa-play','fa-pause');
+        currentSong=a;
+        playPause=b;
+      }
+      else
+      {
+        a.pause();
+        document.getElementById("video-background").pause();
+        document.getElementById('null').classList.toggle('paused');
+        b.classList.replace('fa-pause','fa-play');
+      }
+    }
+
+    function songEnded(n) 
+    {
+      let b=document.getElementById(`suii${n}`);
+      b.classList.replace('fa-pause','fa-play');
+      if(n+1!=songs.length) play(n+1);
+      else document.getElementById('null').classList.toggle('paused');
+    }
+
+    function next(n)
+    {
+      if(n+1!=songs.length) play(n+1);
+    }
+
+    function back(n)
+    {
+      if(n-1!=-1) play(n-1);
+    }
+
+    function formatTime(n)
+    {
+      let min=Math.floor(n/60);
+      let sec=Math.floor(n%60);
+      return min+":"+(sec<10?"0":"")+sec;
+    }
+
+    document.addEventListener('keydown',keyboard)
+    function keyboard(o)
+    {
+      let a=document.getElementById(forKeyBoard);
+      let b=document.getElementById('video-background');
+      let val=o.key;
+      if(val==' ') resume(forKeyBoard);
+      else if(val=='ArrowRight')
+      {
+        a.currentTime+=10;
+        b.currentTime+=10;
+      }
+      else if(val=='ArrowLeft')
+      {
+        a.currentTime-=10;
+        b.currentTime-=10;
+      } 
+      else if(val=='ArrowUp')
+      {
+        a.volume+=0.1;
+        if(a.volume>1) volume=1;
+      }
+      else if(val=='ArrowDown')
+      {
+        a.volume-=0.1;
+        if(a.volume<0) volume=0;
+      }
+    }
+  </script>
+</body>
+</html>
